@@ -1,3 +1,8 @@
+# News
+More detailed log.
+# TODO
+Improve conflict handling.
+
 # JSON1
 
 > Status: Usable in practice, but contains a couple super obscure known bugs. See below for details.

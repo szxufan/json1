@@ -1649,8 +1649,8 @@ function tryTransform(op1: JSONOp, op2: JSONOp, direction: 'left' | 'right'): {
 
   if (!RELEASE_MODE && debugMode) {
     log("transforming " + direction + ":")
-    log('op1', op1)
-    log('op2', op2)
+    log('op1', JSON.stringify(op1))
+    log('op2', JSON.stringify(op2))
 
     log(`repro: transform(${[op1, op2, direction].map(x => JSON.stringify(x)).join(', ')})`) 
   }
