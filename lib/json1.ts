@@ -219,13 +219,35 @@ const typeOrThrow = (name: string) => {
 
 registerSubtype(require('ot-text-unicode'))
 
-const add = (a: number, b: number) => a + b
+const add = (a: number, b: number) => (typeof a === 'number' ? a : 0) + b
 registerSubtype({
   name: 'number',
   apply: add,
   compose: add,
   invert: (n: number) => -n,
   transform: a => a,
+})
+
+const forceReplace = (a: any, b: any) => b;
+registerSubtype({
+  name: "force-replace",
+  apply: forceReplace,
+  compose: forceReplace,
+  transform: a => a
+})
+
+type CompareReplaceOp = {
+  data: any,
+  compare: function
+}
+
+const compareReplace = (a: any, b: CompareReplaceOp) => (a === null || a === undefined || b.compare(a, b.data)) ? b.data : a;
+const compareReplaceCompose = (a: any, b: CompareReplaceOp) => (a === null || a === undefined || b.compare(a.data, b.data)) ? {data: b.data, compare: a.compare || b.compare} : a;
+registerSubtype({
+  name: "compare-replace",
+  apply: compareReplace,
+  compose: compareReplaceCompose,
+  transform: a => a
 })
 
 const getEditType = (c?: JSONOpComponent | null) => (
@@ -2838,7 +2860,7 @@ function tryTransform(op1: JSONOp, op2: JSONOp, direction: 'left' | 'right'): {
 
 const throwConflictErr = (conflict: Conflict) => {
   const err = new Error('Transform detected write conflict')
-  ;(err as any).conflict = conflict
+  ;(err as any).conflict = JSON.stringify(conflict);
   ;(err as any).type = err.name = 'writeConflict'
   throw err
 }
