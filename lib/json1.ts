@@ -118,24 +118,25 @@ export const moveOp = (from: Path, to: Path) => (
   .get()
 )
 
-export const insertOp = (path: Path, value: Doc) => (
-  writeCursor()
-  .writeAtPath(path, 'i', value)
-  .get()
-)
-
-export const replaceOp = (path: Path, oldVal: Doc, newVal: Doc) => (
-  writeCursor().at(path, (w) => {
-    w.write('r', oldVal)
-    w.write('i', newVal)
-  }).get()
-)
-
 export const editOp = (path: Path, type: Subtype | string, subOp: any, preserveNoop: boolean = false) => (
   writeCursor()
   .at(path, w => writeEdit(w, type, subOp, preserveNoop))
   .get()
 )
+
+
+export const replaceOp = (path: Path, oldVal: Doc, newVal: Doc) => {
+  if (oldVal === true) {
+    return editOp(path, "force-replace", newVal);
+  } else {
+    return writeCursor().at(path, (w) => {
+      w.write('r', oldVal)
+      w.write('i', newVal)
+    }).get()
+  }
+}
+
+export const insertOp = (path: Path, value: Doc) => editOp(path, "force-replace", value);
 
 type DocObj = {[k: string]: Doc}
 // Remove key from container. Return container with key removed
@@ -238,7 +239,7 @@ registerSubtype({
 
 type CompareReplaceOp = {
   data: any,
-  compare: function
+  compare: Function
 }
 
 const compareReplace = (a: any, b: CompareReplaceOp) => (a === null || a === undefined || b.compare(a, b.data)) ? b.data : a;
