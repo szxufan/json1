@@ -1,6 +1,6 @@
 {
   "name": "@mylinkpi/ot-json1",
-  "version": "1.0.6",
+  "version": "2.0.1",
   "description": "JSON OT type",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

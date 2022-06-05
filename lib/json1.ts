@@ -129,10 +129,7 @@ export const replaceOp = (path: Path, oldVal: Doc, newVal: Doc) => {
   if (oldVal === true) {
     return editOp(path, "force-replace", newVal);
   } else {
-    return writeCursor().at(path, (w) => {
-      w.write('r', oldVal)
-      w.write('i', newVal)
-    }).get()
+    return editOp(path, "compare-replace", {data: newVal, compare: (a: any,b: any) => a === oldVal});
   }
 }
 

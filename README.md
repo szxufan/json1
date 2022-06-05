@@ -1,7 +1,5 @@
 # News
-More detailed log.
-# TODO
-Improve conflict handling.
+Replace insert and replace with overwrite to avoid conflicts.
 
 # JSON1
 
