@@ -133,7 +133,15 @@ export const replaceOp = (path: Path, oldVal: Doc, newVal: Doc) => {
   }
 }
 
-export const insertOp = (path: Path, value: Doc) => editOp(path, "force-replace", value);
+export const insertOp = (path: Path, value: Doc) => {
+  if (typeof path[path.length - 1] === 'number') {
+    return writeCursor()
+      .writeAtPath(path, 'i', value)
+      .get();
+  } else {
+    return editOp(path, "force-replace", value);
+  }
+}
 
 type DocObj = {[k: string]: Doc}
 // Remove key from container. Return container with key removed
