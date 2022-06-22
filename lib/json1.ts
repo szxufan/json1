@@ -525,7 +525,7 @@ function apply(snapshot: Doc | undefined, op: JSONOp) {
             ? removeChild(container as Doc[] | DocObj, d)
             : replaceChild(container as Doc[] | DocObj, d, subDoc)
       } else if (hasPick(d)) {
-        assert(subDoc !== undefined, 'Cannot pick up or remove undefined')
+        assert(subDoc !== undefined, `Cannot pick up or remove undefined ${JSON.stringify(op)}`)
         if (d.p != null) held[d.p] = subDoc
         subDoc = undefined
       }
